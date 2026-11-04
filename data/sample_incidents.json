@@ -1,0 +1,24 @@
+[
+  {
+    "incident_id": "CS-DEMO-001",
+    "scenario": "Synthetic SBI-inspired phishing scenario",
+    "transaction_amount_inr": 25000,
+    "typical_amount_inr": 3000,
+    "unusual_time": true,
+    "unusual_location": false,
+    "rapid_transactions": true,
+    "reported_phishing": true,
+    "note": "Fictional training data. Not an actual SBI incident."
+  },
+  {
+    "incident_id": "CS-DEMO-002",
+    "scenario": "Synthetic ordinary transaction",
+    "transaction_amount_inr": 1200,
+    "typical_amount_inr": 2500,
+    "unusual_time": false,
+    "unusual_location": false,
+    "rapid_transactions": false,
+    "reported_phishing": false,
+    "note": "Fictional training data."
+  }
+]
