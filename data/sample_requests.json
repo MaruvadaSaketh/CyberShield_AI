@@ -1,0 +1,50 @@
+{
+  "transactions": [
+    {
+      "name": "ordinary_low_risk",
+      "payload": {
+        "amount": 1200,
+        "typical_amount": 3000
+      }
+    },
+    {
+      "name": "unusual_location",
+      "payload": {
+        "amount": 2500,
+        "typical_amount": 3000,
+        "unusual_location": true
+      }
+    },
+    {
+      "name": "multiple_risk_indicators",
+      "payload": {
+        "amount": 30000,
+        "typical_amount": 3000,
+        "unusual_transaction_time": true,
+        "unusual_location": true,
+        "multiple_rapid_transactions": true,
+        "related_phishing_message_reported": true
+      }
+    }
+  ],
+  "phishing_messages": [
+    {
+      "name": "ordinary_message",
+      "payload": {
+        "message": "Your monthly statement is ready in the official banking app."
+      }
+    },
+    {
+      "name": "credential_request",
+      "payload": {
+        "message": "Urgent: your account is suspended. Verify now and send your OTP and password."
+      }
+    },
+    {
+      "name": "shortened_link",
+      "payload": {
+        "message": "Act now to verify your bank details at https://bit.ly/example-check"
+      }
+    }
+  ]
+}
