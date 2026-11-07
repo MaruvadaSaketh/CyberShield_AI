@@ -16,6 +16,8 @@ pip install streamlit requests
 $env:CYBERSHIELD_API_URL="http://127.0.0.1:8000"
 streamlit run streamlit_example.py
 ```
+The main dashboard reads `CYBERSHIELD_API_URL` from `.env` (default
+`http://127.0.0.1:8000`); set it to the backend's address if using another port.
 
 ## Endpoints
 - `GET /health`
@@ -28,7 +30,6 @@ streamlit run streamlit_example.py
 - `GET /api/incidents?limit=50` (limit 1–200)
 - `GET /api/incidents/{incident_id}`
 - `GET /api/summary`
-- `POST /api/incidents/send-to-switch`
 - `GET /api/agent-workflow`
 
 ## Local sample data and incident storage
@@ -57,21 +58,26 @@ send transaction and phishing analysis alerts to a Discord channel. The
 analysis endpoints continue to return the analysis result if Discord is
 unconfigured, unreachable, or rejects an alert. The response's `discord` field
 reports `sent: false` and a reason/status code, and the server logs the failure.
+The backend loads `.env` from the repository root regardless of the launch
+working directory. `GET /api/discord/status` checks token validity and channel
+access without sending a message; it does not verify channel send-message
+permissions. Open `/docs` and execute that endpoint before testing alerts.
 Alerts disable automatic mentions, redact recognized email, phone,
 account-number, and credential patterns, and are limited to Discord's message
 size. Keep the bot token private; do not put it in `.env.example` or commit it.
 
-## Sending incident reports to Switch
+## Gemini account recovery workflow
 
-Set `SWITCH_BRIDGE_URL`, `SWITCH_AGENT_ID`, `SWITCH_AGENT_KEY`, and
-`SWITCH_ROOM_ID` in `.env` to enable `POST /api/incidents/send-to-switch`.
-The endpoint validates the report and sends only the incident ID, type,
-severity, risk score, and redacted summary to the configured Switch room.
-Without all four settings, it returns `503` and the rest of the backend remains
-available. Switch connection errors return `502`; rejected reports preserve
-the upstream HTTP status without returning upstream response contents.
-The sample `.env.example` lists these optional settings; leaving them blank
-does not prevent the backend from starting.
+The AI Agent Workflow page uses the Gemini API directly. Set `GOOGLE_API_KEY`
+in the project-root `.env`.
+`GEMINI_MODEL` defaults to `gemini-2.0-flash`. Install dependencies with
+`pip install -r requirements.txt` and restart the backend after changing the
+configuration.
+
+The workflow sends only the incident ID, type, severity, score, and a redacted
+summary. Its recommendations are advisory; it does not make account changes
+and requires human review. Do not use real customer data. Keep API keys out of
+source control, and rotate any key that has been exposed.
 
 ## Scope
 

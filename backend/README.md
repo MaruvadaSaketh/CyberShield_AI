@@ -28,7 +28,6 @@ streamlit run streamlit_example.py
 - `GET /api/incidents?limit=50` (limit 1–200)
 - `GET /api/incidents/{incident_id}`
 - `GET /api/summary`
-- `POST /api/incidents/send-to-switch`
 - `GET /api/agent-workflow`
 
 ## Local sample data and incident storage
@@ -60,18 +59,6 @@ reports `sent: false` and a reason/status code, and the server logs the failure.
 Alerts disable automatic mentions, redact recognized email, phone,
 account-number, and credential patterns, and are limited to Discord's message
 size. Keep the bot token private; do not put it in `.env.example` or commit it.
-
-## Sending incident reports to Switch
-
-Set `SWITCH_BRIDGE_URL`, `SWITCH_AGENT_ID`, `SWITCH_AGENT_KEY`, and
-`SWITCH_ROOM_ID` in `.env` to enable `POST /api/incidents/send-to-switch`.
-The endpoint validates the report and sends only the incident ID, type,
-severity, risk score, and redacted summary to the configured Switch room.
-Without all four settings, it returns `503` and the rest of the backend remains
-available. Switch connection errors return `502`; rejected reports preserve
-the upstream HTTP status without returning upstream response contents.
-The sample `.env.example` lists these optional settings; leaving them blank
-does not prevent the backend from starting.
 
 ## Scope
 
