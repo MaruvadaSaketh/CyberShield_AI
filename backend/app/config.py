@@ -3,10 +3,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     discord_bot_token: str = ""
     discord_channel_id: str = ""
-    switch_bridge_url: str = ""
-    switch_agent_id: str = ""
-    switch_agent_key: str = ""
-    switch_room_id: str = ""
+    google_api_key: str = ""
+    agent_name: str = "fraud-detection"
+    gemini_model: str = "gemini-2.0-flash"
     switch_room_name: str = "CyberShield"
     switch_enabled: bool = False
     cors_origins: str = "http://localhost:8501,http://127.0.0.1:8501"

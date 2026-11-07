@@ -1,0 +1,11 @@
+id,message,label,category
+1,"URGENT: Your SBI KYC will expire today. Click http://example.invalid/kyc to update immediately.",phishing,kyc_expiry
+2,"Your SBI account will be blocked today. Complete KYC verification immediately using this link.",phishing,account_blocking
+3,"SBI ALERT: Update your KYC details now to avoid account suspension. Click here to verify.",phishing,kyc_expiry
+4,"Dear customer, your bank account requires immediate KYC verification. Submit your details now.",phishing,kyc_expiry
+5,"Your SBI KYC has expired. Verify your account details immediately to prevent service disruption.",phishing,kyc_expiry
+6,"Congratulations! Your SBI account is eligible for a reward. Click the link to claim your prize.",phishing,reward_scam
+7,"SBI: Your account has been temporarily suspended. Verify your identity immediately.",phishing,account_blocking
+8,"Your SBI KYC is due for renewal. Please visit your bank branch or official SBI website.",legitimate,kyc_reminder
+9,"SBI: Your account statement is available. Log in through the official SBI app to view it.",legitimate,account_notification
+10,"Dear customer, please contact your SBI branch for assistance with your KYC update.",legitimate,kyc_reminder

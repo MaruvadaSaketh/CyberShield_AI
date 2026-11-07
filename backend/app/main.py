@@ -1,9 +1,7 @@
 import json
 from contextlib import asynccontextmanager
 from pathlib import Path
-from urllib.parse import quote
 
-import httpx
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
@@ -167,80 +165,11 @@ def incident_detail(incident_id: str):
     return found
 
 
-@app.post("/api/incidents/send-to-switch")
-async def send_incident_to_switch(report: IncidentReport):
-    if not 0 <= report.risk_score <= 100:
-        raise HTTPException(status_code=400, detail="Invalid risk score")
-
-    required_settings = {
-        "SWITCH_BRIDGE_URL": settings.switch_bridge_url,
-        "SWITCH_AGENT_ID": settings.switch_agent_id,
-        "SWITCH_AGENT_KEY": settings.switch_agent_key,
-        "SWITCH_ROOM_ID": settings.switch_room_id,
-    }
-    missing_settings = [
-        name for name, value in required_settings.items() if not value.strip()
-    ]
-    if missing_settings:
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "Switch incident delivery is not configured; missing "
-                + ", ".join(missing_settings)
-            ),
-        )
-
-    message = (
-        f"CyberShield AI — {redact_text(report.incident_id)}\n"
-        f"Type: {redact_text(report.incident_type)}\n"
-        f"Severity: {report.severity}\n"
-        f"Risk score: {report.risk_score}/100\n"
-        f"Summary: {redact_text(report.summary)}"
-    )
-    payload = {
-        "room_id": settings.switch_room_id,
-        "content": message,
-    }
-    headers = {
-        "Authorization": f"Bearer {settings.switch_agent_key}",
-    }
-
-    try:
-        async with httpx.AsyncClient(timeout=20) as client:
-            response = await client.post(
-                f"{settings.switch_bridge_url.rstrip('/')}/agents/"
-                f"{quote(settings.switch_agent_id, safe='')}/message",
-                headers=headers,
-                json=payload,
-            )
-    except httpx.RequestError as exc:
-        raise HTTPException(
-            status_code=502,
-            detail="Could not reach Switch to submit the incident report",
-        ) from exc
-
-    if response.is_error:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail="Switch could not accept the incident report",
-        )
-
-    discord = await send_discord_alert(
-        f"CyberShield Switch Report Submitted\n{message}"
-    )
-    return {
-        "status": "submitted",
-        "incident_id": report.incident_id,
-        "discord": discord,
-    }
-
-
 @app.get("/api/agent-workflow")
 def agent_workflow():
     return {"room": settings.switch_room_name, "agents": [
         {"name": "Incident Commander", "role": "Coordinate triage and summarize"},
         {"name": "Threat Detection", "role": "Assess event indicators"},
-        {"name": "Cross-Account Correlation", "role": "Compare sanitized signals"},
         {"name": "Fraud Risk Analyst", "role": "Explain risk indicators"},
         {"name": "Account Recovery", "role": "Provide safe, user-guided recovery steps"}],
         "human_review_required": True, "switch_enabled": settings.switch_enabled}
