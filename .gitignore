@@ -6,3 +6,11 @@ __pycache__/
 *.sqlite3
 .vscode/
 .pytest_cache/
+.env.*
+!.env.example
+!*.env.example
+.streamlit/secrets.toml
+*.log
+response.json
+.DS_Store
+Thumbs.db
